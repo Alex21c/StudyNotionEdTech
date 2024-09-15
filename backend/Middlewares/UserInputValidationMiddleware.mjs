@@ -16,20 +16,23 @@ export const UserInputValidationMiddleware = async (req, res, next) => {
 
     if (action === "register-new-user") {
       // Input Validations
+      const { itIsGoogleAuth } = req.body;
 
       /// is role valid?
-      const validRoles = ["student", "educator"];
-      req.body.role = req.body.role.toLowerCase();
+      if (!itIsGoogleAuth) {
+        const validRoles = ["student", "educator"];
+        req.body.role = req.body.role.toLowerCase();
 
-      if (!validRoles.includes(req.body.role)) {
-        return next(
-          new CustomError(
-            400,
-            `invalid role ${req.body.role}, valid roles are: ${validRoles.join(
-              ", "
-            )}`
-          )
-        );
+        if (!validRoles.includes(req.body.role)) {
+          return next(
+            new CustomError(
+              400,
+              `invalid role ${
+                req.body.role
+              }, valid roles are: ${validRoles.join(", ")}`
+            )
+          );
+        }
       }
 
       // DB Validations
@@ -37,13 +40,15 @@ export const UserInputValidationMiddleware = async (req, res, next) => {
       if (await UsersModel.findOne({ email: req.body.email })) {
         return next(new CustomError(400, "email already exist!"));
       }
-      /// Does mobile already exist?
-      if (await UsersModel.findOne({ mobile: req.body.mobile })) {
-        return next(new CustomError(400, "mobile already exist!"));
-      }
-      /// Does username already exist?
-      if (await UsersModel.findOne({ username: req.body.username })) {
-        return next(new CustomError(400, "username already exist!"));
+      if (!itIsGoogleAuth) {
+        /// Does mobile already exist?
+        if (await UsersModel.findOne({ mobile: req.body.mobile })) {
+          return next(new CustomError(400, "mobile already exist!"));
+        }
+        /// Does username already exist?
+        if (await UsersModel.findOne({ username: req.body.username })) {
+          return next(new CustomError(400, "username already exist!"));
+        }
       }
     } else if (action === "forget-password") {
       // is it properly formatted email?
@@ -97,6 +102,22 @@ export const UserInputValidationMiddleware = async (req, res, next) => {
             new CustomError(500, `Internal Server Error ${error.message}`)
           );
         }
+      }
+    } else if (action === "modify-role") {
+      // is role present?
+      if (!req?.body?.role) {
+        return next(new CustomError(400, `Missing role in request body`));
+      }
+      // is role valid?
+      req.body.role = req.body.role.toLowerCase();
+      let { role } = req.body;
+      if (role !== "educator" && role !== "student") {
+        return next(
+          new CustomError(
+            400,
+            `Invalid role : ${role}. Allowed roles are student, educator`
+          )
+        );
       }
     }
 

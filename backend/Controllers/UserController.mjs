@@ -5,10 +5,13 @@ import Utils from "../Utils/Utils.mjs";
 import "dotenv/config";
 import { nanoid } from "nanoid";
 import nodemailer from "nodemailer";
+
 const registerNewUser = async (req, res, next) => {
   try {
     // Encrypt the password
-    req.body.password = await Utils.generatePasswordHash(req.body.password);
+    if (!req?.body?.itIsGoogleAuth) {
+      req.body.password = await Utils.generatePasswordHash(req.body.password);
+    }
 
     // Creating new user
     const userDoc = new UserModel(req.body);
@@ -123,6 +126,22 @@ const resetPassword = async (req, res, next) => {
     return next(new CustomError(500, error.message));
   }
 };
+
+const modifyRole = async (req, res, next) => {
+  try {
+    req.user.role = req.body.role;
+    req.user.isRoleModifictionPending = false;
+
+    await req.user.save();
+    res.json({
+      success: true,
+      message: "Role updated Successfully !",
+    });
+  } catch (error) {
+    return next(new CustomError(500, error.message));
+  }
+};
+
 const handshakeHello = async (req, res) => {
   res.json({
     success: true,
@@ -255,5 +274,6 @@ const UserController = {
   handshakeHello,
   forgetPassword,
   resetPassword,
+  modifyRole,
 };
 export default UserController;

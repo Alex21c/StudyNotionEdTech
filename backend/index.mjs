@@ -1,5 +1,6 @@
 import passport from "./Passport/passport-config.mjs";
 import e from "express";
+import jwt from "jsonwebtoken";
 import morgan from "morgan";
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -11,6 +12,8 @@ import SectionRoute from "./Routes/SectionRoute.mjs";
 import RatingsAndReviewsRoute from "./Routes/RatingsAndReviewsRoute.mjs";
 import InvoiceRoute from "./Routes/InvoiceRoute.mjs";
 import fs from "fs";
+import session from "express-session";
+
 // Check if the upload directory exists, if not, create it
 const uploadDir = "Uploads";
 if (!fs.existsSync(uploadDir)) {
@@ -56,9 +59,37 @@ app.use(cors(corsOptions));
 
 // allow me to export json from body
 app.use(e.json());
+// for google auth to enable cookies save
+app.use(
+  session({
+    secret: process.env.JWT_PRIVATE_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true if using HTTPS
+  })
+);
 
 // linking passport
 app.use(passport.initialize());
+// Initiate Google authentication
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Handle the Google callback
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    // After successful authentication, generate JWT
+    const token = jwt.sign({ _id: req.user._id }, process.env.JWT_PRIVATE_KEY, {
+      expiresIn: "1h",
+    });
+    // Redirect to React app with token
+    res.redirect(`http://localhost:3000/modify-role?token=${token}`);
+  }
+);
 
 // Routes
 app.use("/api/v1/user", UserRoute);

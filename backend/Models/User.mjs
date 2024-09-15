@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 import validator from "validator";
 const userSchema = new mongoose.Schema(
   {
-    role: { type: String, required: true, default: "student" },
+    role: { type: String, required: true, default: "student" }, // educator OR stduent
+    isRoleModifictionPending: { type: Boolean, required: true, default: false },
     username: {
       type: String,
-      required: true,
       maxlength: 50,
       match: [
         /^[a-zA-Z0-9_\-]+$/,
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       ],
     },
     firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    lastName: { type: String },
     email: {
       type: String,
       required: true,
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     mobile: {
       type: String,
-      required: true,
+
       validate: {
         validator: function (value) {
           return validator.isMobilePhone(value) && value.length === 10;
@@ -34,20 +34,20 @@ const userSchema = new mongoose.Schema(
         message: "Invalid mobile phone number, allowed length 10",
       },
     },
-    password: { type: String, required: true },
+    password: { type: String },
     gender: {
       type: String,
-      required: true,
+
       maxlength: 6,
       match: [
         /^[a-zA-Z]+$/,
         "Invalid gender. Only alphabets allowed, allowed length 6",
       ],
     },
-    dateOfBirth: { type: Date, required: true },
+    dateOfBirth: { type: Date },
     about: {
       type: String,
-      required: true,
+
       maxlength: 100,
       match: [
         /^[a-zA-Z0-9\-\.\s]+$/,
@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
     passwordResetToken: { type: String },
+    googleProfileImage: { type: String },
   },
   { timestamps: true }
 );
