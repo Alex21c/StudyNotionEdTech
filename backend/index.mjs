@@ -13,6 +13,8 @@ import RatingsAndReviewsRoute from "./Routes/RatingsAndReviewsRoute.mjs";
 import InvoiceRoute from "./Routes/InvoiceRoute.mjs";
 import fs from "fs";
 import session from "express-session";
+import cookieParser from "cookie-parser";
+import { cookiesOptions } from "./Utils/Misc.mjs";
 
 // Check if the upload directory exists, if not, create it
 const uploadDir = "Uploads";
@@ -23,8 +25,11 @@ if (!fs.existsSync(uploadDir)) {
 
 const PORT = process.env.PORT || 4000;
 const app = e();
+app.use(cookieParser());
+
 // Req logging
 app.use(morgan("dev"));
+
 // Making connection with DB
 mongoose
   .connect(process.env.MONGODB_CONNECTION_STRING)
@@ -42,7 +47,7 @@ const corsOptions = {
   origin: (origin, callback) => {
     if (
       !origin ||
-      origin.includes("localhost:3000") ||
+      origin.includes("http://localhost:3000") ||
       origin.includes("https://study-notion-edtech.vercel.app")
     ) {
       callback(null, true);
@@ -50,7 +55,7 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  allowedHeaders: ["Authorization", "Content-Type"],
+  allowedHeaders: ["Authorization", "Content-Type", "credentials"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   optionsSuccessStatus: 200,
 };
@@ -76,6 +81,11 @@ app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
+app.get("/api/protected-endpoint", (req, res) => {
+  console.log("Cookies:", req.cookies.jwt);
+  // Your protected logic here
+  res.send("Protected content");
+});
 
 // Handle the Google callback
 app.get(
@@ -84,10 +94,27 @@ app.get(
   (req, res) => {
     // After successful authentication, generate JWT
     const token = jwt.sign({ _id: req.user._id }, process.env.JWT_PRIVATE_KEY, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
-    // Redirect to React app with token
-    res.redirect(`http://localhost:3000/modify-role?token=${token}`);
+    console.log(token);
+    // Send Set-Cookie header
+    res.cookie("jwt", token, cookiesOptions);
+
+    // Set the token in a cookie
+    // res.cookie("Authorization", token, {
+    //   httpOnly: true,
+    //   secure: process.env.BASE_URL_FRONT_END.includes("localhost")
+    //     ? false
+    //     : true,
+    // }); // Set the cookie
+
+    if (req?.user?.isRoleModifictionPending) {
+      // Redirect to modify-role with token
+      res.redirect(`${process.env.BASE_URL_FRONT_END}/modify-role`);
+    } else {
+      // Redirect to dashboard with token
+      res.redirect(`${process.env.BASE_URL_FRONT_END}/dashboard`);
+    }
   }
 );
 

@@ -38,16 +38,27 @@ export default class Utils {
 
   static generateJwtToken(userDoc) {
     try {
-      return (
-        "Bearer " +
-        jwt.sign(
-          {
-            _id: userDoc._id,
-            firstName: userDoc.firstName,
-          },
-          process.env.JWT_PRIVATE_KEY,
-          { expiresIn: process.env.USER_SESSION_EXPIRES_AFTER }
-        )
+      return jwt.sign(
+        {
+          _id: userDoc._id,
+          firstName: userDoc.firstName,
+        },
+        process.env.JWT_PRIVATE_KEY,
+        { expiresIn: process.env.USER_SESSION_EXPIRES_AFTER }
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+  static verifyJwtToken(jwt) {
+    try {
+      return jwt.sign(
+        {
+          _id: userDoc._id,
+          firstName: userDoc.firstName,
+        },
+        process.env.JWT_PRIVATE_KEY,
+        { expiresIn: process.env.USER_SESSION_EXPIRES_AFTER }
       );
     } catch (error) {
       throw error;

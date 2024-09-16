@@ -57,3 +57,11 @@ export function showErrorMsg(msg, setSnackbarState, setOpen) {
   });
   setOpen(true);
 }
+
+export function showSuccessMsg(msg, setSnackbarState, setOpen) {
+  setSnackbarState({
+    msg,
+    successOrError: "success",
+  });
+  setOpen(true);
+}

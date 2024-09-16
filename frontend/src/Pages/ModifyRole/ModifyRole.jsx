@@ -1,104 +1,104 @@
-import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import apiUrls from "../../apiUrls.mjs";
 import validator from "validator";
 import { getProjectName } from "../../utils.mjs";
 import MuiSnackbar, {
   useSetInitialStateSnackbar,
   openTheSnackBar,
+  showSuccessMsg,
   showErrorMsg,
 } from "../../Components/MUI/Snackbar/MuiSnackbar";
 
 export default function ModifyRole() {
+  const navigate = useNavigate();
   const [open, setOpen] = useSetInitialStateSnackbar();
   const [snackbarState, setSnackbarState] = useState({
     msg: "",
     successOrError: "error",
   });
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  // update local storage with the authToken
-  localStorage.setItem("Authorization", `Bearer ${token}`);
+  // const token = searchParams.get("token");
+  // useEffect(() => {
+  //   // update local storage with the authToken
+  //   localStorage.setItem(
+  //     getProjectName() + "-Authorization",
+  //     `Bearer ${token}`
+  //   );
+  // }, []);
 
   async function handleFormSubmit(event) {
-    event.preventDefault();
-    const apiUrl = apiUrls?.user?.modifyRole;
-    if (!apiUrl) {
-      console.log("failed to make api call, Missing apiUrls?.user?.modifyRole");
-      showErrorMsg(
-        "Failed to Modify Role, kindly try again later",
-        setSnackbarState,
-        setOpen
-      );
-      return;
+    try {
+      event.preventDefault();
+      const apiUrl = apiUrls?.user?.modifyRole;
+      if (!apiUrl) {
+        console.log(
+          "failed to make api call, Missing apiUrls?.user?.modifyRole"
+        );
+        showErrorMsg(
+          "Failed to Modify Role, kindly try again later",
+          setSnackbarState,
+          setOpen
+        );
+        return;
+      }
+
+      //make an api call to the backend
+      if (
+        !validator.isURL(process.env.REACT_APP_SERVER_ROOT_URL, {
+          require_tld: false,
+        })
+      ) {
+        console.log(
+          `failed to make api call, kindly make sure .env contains valid url, process.env.REACT_APP_SERVER_ROOT_URL, ${process.env.REACT_APP_SERVER_ROOT_URL}`
+        );
+        showErrorMsg(
+          "Failed to SignUp, kindly try again later",
+          setSnackbarState,
+          setOpen
+        );
+        return;
+      }
+      const reqUrl = process.env.REACT_APP_SERVER_ROOT_URL + apiUrl;
+
+      const prjName = getProjectName();
+
+      const headers = {
+        "Content-Type": "application/json",
+        credentials: "include",
+        // Authorization: localStorage.getItem(
+        //   getProjectName() + "-Authorization"
+        // ),
+      };
+
+      const data = {
+        role: stateRole,
+      };
+
+      let response = await fetch(reqUrl, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(data),
+      });
+      if (!response) {
+        throw new Error(
+          "Failed to Make Req. with Server! please try again later..."
+        );
+      }
+      response = await response.json();
+      if (!response?.success) {
+        throw new Error("Failed to updated role! please try again later...");
+      }
+
+      showSuccessMsg(response.message, setSnackbarState, setOpen);
+
+      // redirect user to dashboard
+      setTimeout(() => {
+        // navigate("/dashboard");
+      }, 1000);
+    } catch (error) {
+      showErrorMsg(error.message, setSnackbarState, setOpen);
     }
-
-    //make an api call to the backend
-    if (
-      !validator.isURL(process.env.REACT_APP_SERVER_ROOT_URL, {
-        require_tld: false,
-      })
-    ) {
-      console.log(
-        `failed to make api call, kindly make sure .env contains valid url, process.env.REACT_APP_SERVER_ROOT_URL, ${process.env.REACT_APP_SERVER_ROOT_URL}`
-      );
-      showErrorMsg(
-        "Failed to SignUp, kindly try again later",
-        setSnackbarState,
-        setOpen
-      );
-      return;
-    }
-    const reqUrl = process.env.REACT_APP_SERVER_ROOT_URL + apiUrl;
-
-    const prjName = getProjectName();
-    console.log(prjName);
-    // try {
-    //   const headers = {
-    //     "Content-Type": "application/json",
-    //   };
-    //   if (
-    //     refUsernameOrEmailOrMobile.current.value === "" ||
-    //     refPassword.current.value === ""
-    //   ) {
-    //     showErrorMsg(
-    //       "All form fileds are required, Kindly make sure form is filled properly",
-    //       setSnackbarState,
-    //       setOpen
-    //     );
-    //     return;
-    //   }
-
-    //   const data = {
-    //     usernameOrEmailOrMobile: refUsernameOrEmailOrMobile.current.value,
-    //     password: refPassword.current.value,
-    //   };
-
-    //   let response = await fetch(reqUrl, {
-    //     method: "POST",
-    //     headers,
-    //     body: JSON.stringify(data),
-    //   });
-    //   if (!response) {
-    //     throw new Error(
-    //       "Failed to Make Req. with Server! please try again later..."
-    //     );
-    //   }
-    //   response = await response.json();
-    //   if (!response.success) {
-    //     throw new Error(response.message);
-    //   }
-    //   localStorage.setItem(prjName + "-Authorization", response?.Authorization);
-    //   // redirect user to homepage
-    //   setTimeout(() => {
-    //     navigate("/");
-    //   }, 1000);
-    // } catch (error) {
-    //   showErrorMsg(error.message, setSnackbarState, setOpen);
-    // }
-
-    // if success, save the auth token to local storage and then return user to the homepage
-    // otherwise show failure message
   }
 
   let [stateRole, setStateRole] = useState("student");

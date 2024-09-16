@@ -1,3 +1,4 @@
+import JwtCookieAuthentication from "../Middlewares/JwtCookieAuthentication.mjs";
 import e from "express";
 import UserController from "../Controllers/UserController.mjs";
 import { UserInputValidationMiddleware } from "../Middlewares/userInputValidationMiddleware.mjs";
@@ -25,7 +26,7 @@ UserRoute.patch(
 );
 UserRoute.patch(
   "/modify-role",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   UserInputValidationMiddleware,
   UserController.modifyRole
 );

@@ -7,10 +7,22 @@ import NotFound from "./Pages/NotFound/NotFound";
 import ModifyRole from "./Pages/ModifyRole/ModifyRole";
 import Login from "./Pages/Login/Login";
 import RegisterNewUser from "./Pages/RegisterNewUser/RegisterNewUser";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import SetAuthrizationTokenAndRedirect from "./Pages/SetAuthrizationTokenAndRedirect/SetAuthrizationTokenAndRedirect";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Homepage />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/SetAuthrizationTokenAndRedirect",
+    element: <SetAuthrizationTokenAndRedirect />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
     errorElement: <NotFound />,
   },
   {

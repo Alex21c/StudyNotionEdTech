@@ -5,7 +5,7 @@ import Utils from "../Utils/Utils.mjs";
 import "dotenv/config";
 import { nanoid } from "nanoid";
 import nodemailer from "nodemailer";
-
+import { cookiesOptions } from "../Utils/Misc.mjs";
 const registerNewUser = async (req, res, next) => {
   try {
     // Encrypt the password
@@ -22,10 +22,12 @@ const registerNewUser = async (req, res, next) => {
     // Generate JWT Token
     const Authorization = Utils.generateJwtToken(userDoc);
 
+    // Instruct the client to set the JWT token inside cookie
+    res.cookie("jwt", Authorization, cookiesOptions);
+
     // Return success message with JWT Token
     return res.status(201).json({
       success: true,
-      Authorization,
     });
   } catch (error) {
     // Check for validation error
