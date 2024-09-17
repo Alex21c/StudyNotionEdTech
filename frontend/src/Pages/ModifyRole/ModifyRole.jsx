@@ -65,7 +65,7 @@ export default function ModifyRole() {
 
       const headers = {
         "Content-Type": "application/json",
-        credentials: "include",
+
         // Authorization: localStorage.getItem(
         //   getProjectName() + "-Authorization"
         // ),
@@ -78,6 +78,7 @@ export default function ModifyRole() {
       let response = await fetch(reqUrl, {
         method: "PATCH",
         headers,
+        credentials: "include",
         body: JSON.stringify(data),
       });
       if (!response) {
@@ -94,7 +95,7 @@ export default function ModifyRole() {
 
       // redirect user to dashboard
       setTimeout(() => {
-        // navigate("/dashboard");
+        navigate("/dashboard");
       }, 1000);
     } catch (error) {
       showErrorMsg(error.message, setSnackbarState, setOpen);

@@ -104,7 +104,7 @@ export const UserInputValidationMiddleware = async (req, res, next) => {
         }
       }
     } else if (action === "modify-role") {
-      return res.send("hi there");
+      console.log("hi there its modify-rule middleware");
       // is role present?
       if (!req?.body?.role) {
         return next(new CustomError(400, `Missing role in request body`));

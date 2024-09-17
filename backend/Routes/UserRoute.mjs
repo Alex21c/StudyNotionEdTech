@@ -1,7 +1,7 @@
 import JwtCookieAuthentication from "../Middlewares/JwtCookieAuthentication.mjs";
 import e from "express";
 import UserController from "../Controllers/UserController.mjs";
-import { UserInputValidationMiddleware } from "../Middlewares/userInputValidationMiddleware.mjs";
+import { UserInputValidationMiddleware } from "../Middlewares/UserInputValidationMiddleware.mjs";
 import passport from "../Passport/passport-config.mjs";
 const UserRoute = e.Router();
 UserRoute.post(
@@ -30,5 +30,6 @@ UserRoute.patch(
   UserInputValidationMiddleware,
   UserController.modifyRole
 );
+UserRoute.post("/logout", UserController.logout);
 UserRoute.get("/handshake-hello", UserController.handshakeHello);
 export default UserRoute;

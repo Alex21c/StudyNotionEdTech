@@ -131,6 +131,7 @@ const resetPassword = async (req, res, next) => {
 
 const modifyRole = async (req, res, next) => {
   try {
+    console.log("hi there its modifyRule fxn");
     req.user.role = req.body.role;
     req.user.isRoleModifictionPending = false;
 
@@ -140,6 +141,7 @@ const modifyRole = async (req, res, next) => {
       message: "Role updated Successfully !",
     });
   } catch (error) {
+    console.log(error.message);
     return next(new CustomError(500, error.message));
   }
 };
@@ -148,6 +150,13 @@ const handshakeHello = async (req, res) => {
   res.json({
     success: true,
     message: "hi there!",
+  });
+};
+const logout = async (req, res) => {
+  res.clearCookie("jwt", cookiesOptions);
+  res.json({
+    success: true,
+    message: "Successfully logged out !",
   });
 };
 
@@ -277,5 +286,6 @@ const UserController = {
   forgetPassword,
   resetPassword,
   modifyRole,
+  logout,
 };
 export default UserController;

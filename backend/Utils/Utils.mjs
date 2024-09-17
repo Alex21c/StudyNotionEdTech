@@ -50,18 +50,11 @@ export default class Utils {
       throw error;
     }
   }
-  static verifyJwtToken(jwt) {
+  static verifyJwtToken(token) {
     try {
-      return jwt.sign(
-        {
-          _id: userDoc._id,
-          firstName: userDoc.firstName,
-        },
-        process.env.JWT_PRIVATE_KEY,
-        { expiresIn: process.env.USER_SESSION_EXPIRES_AFTER }
-      );
-    } catch (error) {
-      throw error;
+      return jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    } catch (err) {
+      return false;
     }
   }
 

@@ -1,3 +1,4 @@
+import Header from "../../Components/Header/Header";
 import MuiSnackbar, {
   useSetInitialStateSnackbar,
   openTheSnackBar,
@@ -13,6 +14,7 @@ export default function Dashboard() {
   });
   return (
     <div className="text-stone-100">
+      <Header />
       <div>this is the dashbaord</div>
       <MuiSnackbar
         open={open}

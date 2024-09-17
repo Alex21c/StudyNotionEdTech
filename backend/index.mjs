@@ -25,7 +25,7 @@ if (!fs.existsSync(uploadDir)) {
 
 const PORT = process.env.PORT || 4000;
 const app = e();
-app.use(cookieParser());
+app.use(cookieParser([process.env.JWT_PRIVATE_KEY]));
 
 // Req logging
 app.use(morgan("dev"));
@@ -55,7 +55,8 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  allowedHeaders: ["Authorization", "Content-Type", "credentials"],
+  credentials: true,
+  allowedHeaders: ["Authorization", "Content-Type"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   optionsSuccessStatus: 200,
 };
@@ -96,7 +97,7 @@ app.get(
     const token = jwt.sign({ _id: req.user._id }, process.env.JWT_PRIVATE_KEY, {
       expiresIn: "1d",
     });
-    console.log(token);
+
     // Send Set-Cookie header
     res.cookie("jwt", token, cookiesOptions);
 
