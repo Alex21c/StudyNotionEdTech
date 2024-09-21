@@ -1,3 +1,4 @@
+import ContextProviderStudyNotionWebApp from "./Context";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -9,6 +10,7 @@ import Login from "./Pages/Login/Login";
 import RegisterNewUser from "./Pages/RegisterNewUser/RegisterNewUser";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import SetAuthrizationTokenAndRedirect from "./Pages/SetAuthrizationTokenAndRedirect/SetAuthrizationTokenAndRedirect";
+import "./Assests/fontAwesomeProIcons/fontAwesomeIcons.css";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,4 +44,8 @@ const router = createBrowserRouter([
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={router} />);
+root.render(
+  <ContextProviderStudyNotionWebApp>
+    <RouterProvider router={router} />
+  </ContextProviderStudyNotionWebApp>
+);
