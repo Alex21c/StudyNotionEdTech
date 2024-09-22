@@ -62,6 +62,7 @@ const userSchema = new mongoose.Schema(
     ],
     passwordResetToken: { type: String },
     googleProfileImage: { type: String },
+    profileImage: { type: Map, of: String },
   },
   { timestamps: true }
 );

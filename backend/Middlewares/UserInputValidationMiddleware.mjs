@@ -104,7 +104,6 @@ export const UserInputValidationMiddleware = async (req, res, next) => {
         }
       }
     } else if (action === "modify-role") {
-      console.log("hi there its modify-rule middleware");
       // is role present?
       if (!req?.body?.role) {
         return next(new CustomError(400, `Missing role in request body`));
@@ -118,6 +117,13 @@ export const UserInputValidationMiddleware = async (req, res, next) => {
             400,
             `Invalid role : ${role}. Allowed roles are student, educator`
           )
+        );
+      }
+    } else if (action === "update-profile-image") {
+      // just check is there profile image provided by user
+      if (!req.file) {
+        return next(
+          new CustomError(400, `Missing profile image in the request.`)
         );
       }
     }

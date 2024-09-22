@@ -1,3 +1,4 @@
+import Footer from "../../Components/Footer/Footer";
 import LinkButton from "../../Components/Button/Button";
 import { ContextStudyNotionWebApp } from "../../Context";
 import { Link } from "react-router-dom";
@@ -43,7 +44,7 @@ export default function Homepage() {
   let [stateRandomBgImage, setStateRandomBgImage] = useState("#");
 
   function generateRandomImage(heroSectionImages) {
-    const idx = Math.floor(Math.random(heroSectionImages.length) * 10);
+    const idx = Math.floor(Math.random() * heroSectionImages.length);
     const randomImage = heroSectionImages[idx];
     setStateRandomBgImage(randomImage);
   }
@@ -78,98 +79,147 @@ export default function Homepage() {
         snackbarState={snackbarState}
       />
       <Header />
-      <div className="flex flex-col items-center h-[35rem] overflow-hidden relative ">
-        <div className="absolute top-0  bg-gradient-to-br from-slate-800 to-slate-950 w-[100%] h-[100%]  opacity-[.6]"></div>
-        <img
-          src={stateRandomBgImage}
-          className="object-cover w-[100%] h-[100%]"
-        />
-        <div className="absolute flex flex-col gap-[1.5rem] w-[50rem] h-[100%] items-center justify-center ">
-          <h2 className="text-[2.3rem] font-semibold">
-            Empower Your Future with Coding Skills
-          </h2>
-          <p className="text-[1.3rem] text-stone-300">
-            With our online coding courses, you can learn at your own pace, from
-            anywhere in the world, and get access to a wealth of resources,
-            including hands-on projects, quizzes, and personalized feedback from
-            instructors.
-          </p>
-          <div className="flex gap-[2rem]">
-            <LinkButton btnLabel="Upskill Yourself" to="/" />
-            <LinkButton btnLabel="Become an Instructor" to="/" />
+      <div className="flex flex-col gap-[2rem]">
+        <div className="flex flex-col items-center h-[35rem] overflow-hidden relative ">
+          <div className="absolute top-0  bg-gradient-to-br from-slate-800 to-slate-950 w-[100%] h-[100%]  opacity-[.6]"></div>
+          <img
+            src={stateRandomBgImage}
+            className="object-cover w-[100%] h-[100%]"
+          />
+          <div className="absolute flex flex-col gap-[1.5rem] w-[50rem] h-[100%] items-center justify-center ">
+            <h2 className="text-[2.3rem] font-semibold">
+              Empower Your Future with{" "}
+              <span className="bg-gradient-to-r  from-sky-400 to-sky-300 text-transparent bg-clip-text">
+                Coding Skills
+              </span>
+            </h2>
+            <p className="text-[1.3rem] text-stone-200">
+              With our online coding courses, you can learn at your own pace,
+              from anywhere in the world, and get access to a wealth of
+              resources, including hands-on projects, quizzes, and personalized
+              feedback from instructors.
+            </p>
+            <div className="flex gap-[2rem]">
+              <LinkButton btnLabel="Upskill Yourself" to="/" />
+              <LinkButton btnLabel="Become an Instructor" to="/" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex gap-[1rem] p-[1rem] border-[.10rem] border-stone-300  bg-gradient-to-br from-green-700 to-green-800  w-[35rem] rounded-xl">
-        <div>
-          <ul className="flex flex-col text-right">
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-            <li>10</li>
-            <li>11</li>
-            <li>12</li>
-            <li>13</li>
-          </ul>
+        <div className="flex gap-[5rem] justify-center">
+          <div className="flex flex-col gap-[1.5rem] max-w-[35rem] h-[100%] items-center justify-center  ">
+            <h2 className="text-[2.3rem] font-semibold leading-[2.5rem]">
+              Unlock Your{" "}
+              <span className="bg-gradient-to-r  from-sky-400 to-sky-300 text-transparent bg-clip-text">
+                coding potential
+              </span>{" "}
+              with our online courses
+            </h2>
+            <p className="text-[1.3rem] text-stone-200">
+              Our courses are designed and taught by industry experts who have
+              years of experience in coding and are passionate about sharing
+              their knowledge with you.
+            </p>
+            <div className="flex gap-[2rem]">
+              <LinkButton btnLabel="Try it Yourself" to="/" />
+            </div>
+          </div>
+          <div
+            className="flex gap-[1rem] p-[1rem] border-[.10rem] border-stone-300  bg-gradient-to-br from-green-700 to-green-800  w-[30rem] rounded-xl
+          shadow-md shadow-stone-400
+          "
+          >
+            <div>
+              <ul className="flex flex-col text-right text-[.8rem] pt-[.2rem] leading-[1.5rem]">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+                <li>7</li>
+                <li>8</li>
+                <li>9</li>
+                <li>10</li>
+                <li>11</li>
+                <li>12</li>
+                <li>13</li>
+              </ul>
+            </div>
+            <div>
+              <TypeAnimation
+                sequence={[
+                  // Same substring at the start will only be typed out once, initially
+                  '<!DOCTYPE html>\n <html lang="en">\n <head>\n     <meta charset="UTF-8">\n     <meta name="viewport" content="width=device-width, initial-scale=1.0">\n     <title>Document</title>\n </head>\n <body>\n     <h1>Hello World!</h1>\n     <p>Welcome to my website.</p>\n </body>\n </html>',
+                  1000,
+                  "",
+                ]}
+                wrapper="code"
+                speed={50}
+                style={{
+                  whiteSpace: "pre-line",
+                  fontSize: ".8rem",
+                }}
+                repeat={Infinity}
+              />
+            </div>
+          </div>
         </div>
-        <div>
-          <TypeAnimation
-            sequence={[
-              // Same substring at the start will only be typed out once, initially
-              '<!DOCTYPE html>\n <html lang="en">\n <head>\n     <meta charset="UTF-8">\n     <meta name="viewport" content="width=device-width, initial-scale=1.0">\n     <title>Document</title>\n </head>\n <body>\n     <h1>Hello World!</h1>\n     <p>Welcome to my website.</p>\n </body>\n </html>',
-              1000,
-              "",
-            ]}
-            wrapper="code"
-            speed={50}
-            style={{
-              whiteSpace: "pre-line",
-            }}
-            repeat={Infinity}
-          />
+
+        <div className="flex gap-[5rem] justify-center mt-[2rem]">
+          <div className="flex gap-[1rem] p-[1rem] border-[.10rem] border-stone-300  bg-gradient-to-br from-sky-700 to-sky-800  w-[30rem] rounded-xl shadow-md shadow-stone-400">
+            <div>
+              <ul className="flex flex-col text-right text-[.8rem] pt-[.2rem] leading-[1.5rem]">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+                <li>7</li>
+                <li>8</li>
+                <li>9</li>
+                <li>10</li>
+                <li>11</li>
+                <li>12</li>
+                <li>13</li>
+              </ul>
+            </div>
+            <div>
+              <TypeAnimation
+                sequence={[
+                  // Same substring at the start will only be typed out once, initially
+                  "import React from 'react';\n import ReactDOM from 'react-dom';\n import './index.css';\n function App() {\n   return (\n     <div>\n       <h1>Hello, React!</h1>\n       <p>Welcome to your first app.</p>\n     </div>\n   );\n }\n ReactDOM.render(<App />, document.getElementById('root'));",
+                  1000,
+                  "",
+                ]}
+                wrapper="code"
+                speed={50}
+                style={{
+                  whiteSpace: "pre-line",
+                  fontSize: ".8rem",
+                }}
+                repeat={Infinity}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-[1.5rem] max-w-[35rem] h-[100%] items-center justify-center  ">
+            <h2 className="text-[2.3rem] font-semibold leading-[2.5rem]">
+              Get the Skills you need for a{" "}
+              <span className="bg-gradient-to-r  from-sky-400 to-sky-300 text-transparent bg-clip-text">
+                Job that is in demand
+              </span>
+            </h2>
+            <p className="text-[1.3rem] text-stone-200">
+              Upskill yourself and get placed in IT Company as SDE, MERN Stack
+              Developer.
+            </p>
+            <div className="flex gap-[2rem]">
+              <LinkButton btnLabel="Upskill Yourself" to="/" />
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex gap-[1rem] p-[1rem] border-[.10rem] border-stone-300  bg-gradient-to-br from-sky-700 to-sky-800  w-[35rem] rounded-xl">
-        <div>
-          <ul className="flex flex-col text-right">
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-            <li>10</li>
-            <li>11</li>
-            <li>12</li>
-            <li>13</li>
-          </ul>
-        </div>
-        <div>
-          <TypeAnimation
-            sequence={[
-              // Same substring at the start will only be typed out once, initially
-              "import React from 'react';\n import ReactDOM from 'react-dom';\n import './index.css';\n function App() {\n   return (\n     <div>\n       <h1>Hello, React!</h1>\n       <p>Welcome to your first app.</p>\n     </div>\n   );\n }\n ReactDOM.render(<App />, document.getElementById('root'));",
-              1000,
-              "",
-            ]}
-            wrapper="code"
-            speed={50}
-            style={{
-              whiteSpace: "pre-line",
-            }}
-            repeat={Infinity}
-          />
-        </div>
+        <Footer />
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import CloudinaryHelper from "../Utils/CloudinaryHelper.mjs";
 import UserModel from "../Models/User.mjs";
 import CustomError from "../Utils/CustomError.mjs";
 import validator from "validator";
@@ -71,8 +73,11 @@ const loginUser = async (req, res, next) => {
     // generate JWT
     const Authorization = Utils.generateJwtToken(userDoc);
 
+    // Instruct the client to set the JWT token inside cookie
+    res.cookie("jwt", Authorization, cookiesOptions);
+
     // response
-    res.json({ success: true, Authorization });
+    res.json({ success: true });
   } catch (error) {
     return next(new CustomError(500, error.message));
   }
@@ -131,7 +136,6 @@ const resetPassword = async (req, res, next) => {
 
 const modifyRole = async (req, res, next) => {
   try {
-    console.log("hi there its modifyRule fxn");
     req.user.role = req.body.role;
     req.user.isRoleModifictionPending = false;
 
@@ -139,6 +143,68 @@ const modifyRole = async (req, res, next) => {
     res.json({
       success: true,
       message: "Role updated Successfully !",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return next(new CustomError(500, error.message));
+  }
+};
+const updateProfileImage = async (req, res, next) => {
+  try {
+    const profileImage = req?.file;
+
+    if (profileImage) {
+      try {
+        const objCloudinary = new CloudinaryHelper();
+        // delete existing profile image from cloudinary if it exist?
+        if (req.user?.profileImage) {
+          // check if there is an body image then delete it from cloudinary
+          const public_id = req.user.profileImage.get("public_id");
+          try {
+            if (public_id) {
+              await objCloudinary.deleteFile(public_id);
+            }
+          } catch (error) {
+            console.log(error.message);
+          }
+        }
+
+        // upload new profile image
+        const response = await objCloudinary.uploadFile(
+          profileImage,
+          `${process.env.PRJ_NAME || "study-notion-edtech"}/profileImages/${
+            req.user?._id
+          }`
+        );
+        if (!response) {
+          throw new Error("failed to upload file");
+        }
+
+        const imgData = {
+          public_id: response.public_id,
+          url: response.secure_url,
+        };
+        req.user.profileImage = imgData;
+      } catch (error) {
+        return next(
+          new CustomError(
+            500,
+            "Failed to upload profile image file to server ! " + error.message
+          )
+        );
+      } finally {
+        // delete file from uploads dir
+        setTimeout(() => {
+          fs.unlinkSync(req.file.path);
+        }, 2000);
+      }
+    }
+    await req.user.save();
+
+    res.json({
+      success: true,
+      message: "Successfully updated profile image",
+      data: req.user,
     });
   } catch (error) {
     console.log(error.message);
@@ -287,5 +353,6 @@ const UserController = {
   resetPassword,
   modifyRole,
   logout,
+  updateProfileImage,
 };
 export default UserController;

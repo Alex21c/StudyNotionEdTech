@@ -1,3 +1,4 @@
+import JwtCookieAuthentication from "../Middlewares/JwtCookieAuthentication.mjs";
 import e from "express";
 import passport from "../Passport/passport-config.mjs";
 import multerUploadMiddleware from "../Multer/multer-config.mjs";
@@ -10,7 +11,7 @@ const SubSectionRoute = e.Router();
 
 SubSectionRoute.post(
   "/create-new-sub-section",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   (req, res, next) => {
     multerUploadMiddlewareVideos(req, res, (err) => {
       if (err) {
@@ -33,7 +34,7 @@ SubSectionRoute.post(
 );
 SubSectionRoute.put(
   "/edit-sub-section",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   (req, res, next) => {
     multerUploadMiddlewareVideos(req, res, (err) => {
       if (err) {
@@ -56,7 +57,7 @@ SubSectionRoute.put(
 );
 SubSectionRoute.delete(
   "/delete-sub-section",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   SubSectionInputValidationMiddleware,
   SubSectionController.deleteSubSection
 );

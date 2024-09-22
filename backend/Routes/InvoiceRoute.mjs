@@ -1,3 +1,4 @@
+import JwtCookieAuthentication from "../Middlewares/JwtCookieAuthentication.mjs";
 import e from "express";
 import passport from "../Passport/passport-config.mjs";
 import CustomError from "../Utils/CustomError.mjs";
@@ -7,13 +8,13 @@ import "dotenv/config";
 const InvoiceRoute = e.Router();
 InvoiceRoute.post(
   "/generate-new-invoice",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   InvoicesInputValidationMiddleware,
   InvoiceController.generateNewInvoice
 );
 InvoiceRoute.delete(
   "/delete-invoice",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   InvoicesInputValidationMiddleware,
   InvoiceController.deleteInvoice
 );

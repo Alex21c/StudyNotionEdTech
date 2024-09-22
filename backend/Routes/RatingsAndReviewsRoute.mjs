@@ -1,3 +1,4 @@
+import JwtCookieAuthentication from "../Middlewares/JwtCookieAuthentication.mjs";
 import e from "express";
 import passport from "../Passport/passport-config.mjs";
 import multerUploadMiddleware from "../Multer/multer-config.mjs";
@@ -9,15 +10,20 @@ import "dotenv/config";
 const RatingsAndReviewsRoute = e.Router();
 RatingsAndReviewsRoute.post(
   "/create-new-rating-and-review",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   RatingsAndReviewsInputValidationMiddleware,
   RatingsAndReviewsController.createNewRatingAndReview
 );
 RatingsAndReviewsRoute.delete(
   "/delete-rating-and-review",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   RatingsAndReviewsInputValidationMiddleware,
   RatingsAndReviewsController.deleteRatingAndReview
+);
+RatingsAndReviewsRoute.get(
+  "/get-reviews-for-homepage",
+  JwtCookieAuthentication,
+  RatingsAndReviewsController.getReviewsForHomepage
 );
 
 export default RatingsAndReviewsRoute;

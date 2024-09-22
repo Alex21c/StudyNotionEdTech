@@ -1,3 +1,4 @@
+import JwtCookieAuthentication from "../Middlewares/JwtCookieAuthentication.mjs";
 import e from "express";
 import passport from "../Passport/passport-config.mjs";
 import multerUploadMiddleware from "../Multer/multer-config.mjs";
@@ -8,7 +9,7 @@ import "dotenv/config";
 const CourseRoute = e.Router();
 CourseRoute.post(
   "/create-new-course",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   (req, res, next) => {
     multerUploadMiddleware(req, res, (err) => {
       if (err) {
@@ -31,7 +32,7 @@ CourseRoute.post(
 );
 CourseRoute.delete(
   "/delete-course",
-  passport.authenticate("jwt", { session: false }),
+  JwtCookieAuthentication,
   CourseInputValidationMiddleware,
   CourseController.deleteCourse
 );

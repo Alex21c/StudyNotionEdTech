@@ -27,6 +27,42 @@ const createNewRatingAndReview = async (req, res, next) => {
     return next(new CustomError(500, error.message));
   }
 };
+const getReviewsForHomepage = async (req, res, next) => {
+  try {
+    // first fetch all the reviews
+    const reviews = await RatingsAndReviewsModel.find()
+      .populate("writtenByUser", "firstName lastName about googleProfileImage")
+      .populate("belongsToCourseId", "courseName");
+
+    const randomReviews = [];
+    // fetch any three random reviews
+    const indices = [];
+    // safeguard
+    if (reviews?.length <= 3) {
+      randomReviews = reviews;
+    } else {
+      console.log(reviews.length);
+      while (indices.length < 3) {
+        // genrate random idx from 0 to reviews length
+        const idx = Math.floor(Math.random() * reviews.length);
+        // check if it is present in indices
+        // if not add it to indices
+        if (!indices.includes(idx)) {
+          randomReviews.push(reviews.at(idx));
+          indices.push(idx);
+        }
+      }
+    }
+    // return those
+    res.json({
+      success: true,
+      data: randomReviews,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new CustomError(500, error.message));
+  }
+};
 
 const deleteRatingAndReview = async (req, res, next) => {
   try {
@@ -59,5 +95,6 @@ const deleteRatingAndReview = async (req, res, next) => {
 const RatingsAndReviewsController = {
   createNewRatingAndReview,
   deleteRatingAndReview,
+  getReviewsForHomepage,
 };
 export default RatingsAndReviewsController;

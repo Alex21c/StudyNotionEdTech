@@ -12,7 +12,7 @@ import MuiSnackbar, {
   openTheSnackBar,
   showSuccessMsg,
   showErrorMsg,
-} from "../../Components/MUI/Snackbar/MuiSnackbar";
+} from "../MUI/Snackbar/MuiSnackbar";
 const styles = {
   highlightLink:
     "border-b-[.2rem] text-yellow-300 border-yellow-300 rounded-sm",
@@ -110,18 +110,22 @@ export default function Header() {
             <Link
               to="/"
               className={
-                stateWhoIsCurrentPage === "Homepage"
-                  ? styles.highlightLink
-                  : "hover:underline text-blue-300"
+                stateWhoIsCurrentPage === "Homepage" ? styles.highlightLink : ""
               }
             >
               Home
             </Link>
           </li>
           <li>
-            <Link to="/" className="hover:underline text-blue-300">
+            <Link to="/">
               Catalog <i className="fa-regular fa-chevron-down"></i>
             </Link>
+          </li>
+          <li>
+            <Link to="/">About Us</Link>
+          </li>
+          <li>
+            <Link to="/">Contact Us</Link>
           </li>
         </ul>
 
