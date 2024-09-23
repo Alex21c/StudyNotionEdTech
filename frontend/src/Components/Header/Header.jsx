@@ -127,17 +127,23 @@ export default function Header() {
 
         <ul className="flex gap-[1rem]">
           <li>
-            <Link to="/login" className="underline text-blue-300 ">
+            <Link to="/login" className="hover:underline text-blue-300 ">
               Login
             </Link>
           </li>
           <li>
-            <Link to="/register-new-user" className="underline text-blue-300 ">
+            <Link
+              to="/register-new-user"
+              className="hover:underline text-blue-300 "
+            >
               Register
             </Link>
           </li>
           <li>
-            <button onClick={handleLogout} className="underline text-blue-300 ">
+            <button
+              onClick={handleLogout}
+              className="hover:underline text-blue-300 "
+            >
               Logout
             </button>
           </li>

@@ -25,7 +25,7 @@ import MuiSnackbar, {
   showSuccessMsg,
   showErrorMsg,
 } from "../../Components/MUI/Snackbar/MuiSnackbar";
-
+import HomepageReviews from "../../Components/HomepageReviews/HomepageReviews";
 const heroSectionImages = [
   heroSectionImage1,
   heroSectionImage2,
@@ -219,6 +219,7 @@ export default function Homepage() {
             </div>
           </div>
         </div>
+        <HomepageReviews />
         <Footer />
       </div>
     </div>
