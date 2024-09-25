@@ -1,3 +1,4 @@
+import { SkeletonTheme } from "react-loading-skeleton";
 import ContextProviderStudyNotionWebApp from "./Context";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -46,6 +47,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ContextProviderStudyNotionWebApp>
-    <RouterProvider router={router} />
+    <SkeletonTheme>
+      <RouterProvider router={router} />
+    </SkeletonTheme>
   </ContextProviderStudyNotionWebApp>
 );
