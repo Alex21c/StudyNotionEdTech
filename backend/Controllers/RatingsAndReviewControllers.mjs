@@ -31,7 +31,10 @@ const getReviewsForHomepage = async (req, res, next) => {
   try {
     // first fetch all the reviews
     const reviews = await RatingsAndReviewsModel.find()
-      .populate("writtenByUser", "firstName lastName about googleProfileImage")
+      .populate(
+        "writtenByUser",
+        "firstName lastName about googleProfileImage profileImage"
+      )
       .populate("belongsToCourseId", "courseName");
 
     const randomReviews = [];

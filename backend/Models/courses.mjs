@@ -46,6 +46,7 @@ const courseSchema = new mongoose.Schema(
     language: {
       type: String,
       required: true,
+      default: "English",
     },
   },
   { timestamps: true }

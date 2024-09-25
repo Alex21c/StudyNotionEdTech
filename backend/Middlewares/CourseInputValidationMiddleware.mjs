@@ -3,6 +3,7 @@ import SectionModel from "../Models/Section.mjs";
 import mongoose from "mongoose";
 import CustomError from "../Utils/CustomError.mjs";
 import CoursesModel from "../Models/courses.mjs";
+import UsersModel from "../Models/User.mjs";
 import RatingsAndReviewsModel from "../Models/ratingsAndReview.mjs";
 export const CourseInputValidationMiddleware = async (req, res, next) => {
   try {
@@ -13,6 +14,15 @@ export const CourseInputValidationMiddleware = async (req, res, next) => {
     }
 
     if (action === "create-new-course") {
+      // make sure role is educator
+      if (req?.user?.role.toLowerCase() !== "educator") {
+        return next(
+          new CustomError(
+            400,
+            "Only Educators are allowed to create new courses."
+          )
+        );
+      }
       // safeguard make sure there is no other course with similar name
       const coursesWithSimilarName = await CoursesModel.findOne({
         courseName: req?.body?.courseName,
@@ -38,12 +48,33 @@ export const CourseInputValidationMiddleware = async (req, res, next) => {
           }
         });
       // skip null instructors
-      const instructors = [];
-      req.body.instructors.forEach((instructor) => {
+      let instructors = [];
+      const instrutorPromises = req.body.instructors.map(async (instructor) => {
         if (instructor) {
-          instructors.push(instructor);
+          // is instructor valid?
+          if (!mongoose.isValidObjectId(instructor)) {
+            throw new CustomError(
+              400,
+              `Invalid InstructorID : ${instructor} !`
+            );
+          }
+          const instructorUser = await UsersModel.findById(instructor);
+
+          if (!instructorUser) {
+            throw new CustomError(400, `Invalid Instructor : ${instructor} !`);
+          }
+          if (instructorUser?.role.toLowerCase() !== "educator") {
+            throw new CustomError(
+              400,
+              `Instructor : ${instructor} is not an Educator !`
+            );
+          }
+
+          return instructor;
         }
       });
+      instructors = await Promise.all(instrutorPromises);
+
       req.body.instructors = instructors;
     }
     if (action === "delete-course") {

@@ -22,7 +22,6 @@ RatingsAndReviewsRoute.delete(
 );
 RatingsAndReviewsRoute.get(
   "/get-reviews-for-homepage",
-  JwtCookieAuthentication,
   RatingsAndReviewsController.getReviewsForHomepage
 );
 
