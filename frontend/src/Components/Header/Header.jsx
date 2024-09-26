@@ -1,5 +1,6 @@
+import { markUserAsLoggedOutInsideLocalStorage } from "../../utils.mjs";
 import { ContextStudyNotionWebApp } from "../../Context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import validator from "validator";
 import logo from "../../Assests/Images/Header/logo.png";
@@ -19,7 +20,13 @@ const styles = {
 };
 
 export default function Header() {
-  let { stateWhoIsCurrentPage } = useContext(ContextStudyNotionWebApp);
+  let { stateWhoIsCurrentPage, stateIsUserLoggedIn } = useContext(
+    ContextStudyNotionWebApp
+  );
+  useEffect(() => {
+    console.log(typeof stateIsUserLoggedIn);
+    console.log(stateIsUserLoggedIn);
+  }, []);
   const navigate = useNavigate();
   const [open, setOpen] = useSetInitialStateSnackbar();
   const [snackbarState, setSnackbarState] = useState({
@@ -82,7 +89,7 @@ export default function Header() {
       }
 
       showSuccessMsg(response.message, setSnackbarState, setOpen);
-
+      markUserAsLoggedOutInsideLocalStorage();
       // redirect user to dashboard
       setTimeout(() => {
         navigate("/");
@@ -127,11 +134,6 @@ export default function Header() {
 
         <ul className="flex gap-[1rem]">
           <li>
-            <Link to="/login" className="hover:underline text-blue-300 ">
-              Login
-            </Link>
-          </li>
-          <li>
             <Link
               to="/register-new-user"
               className="hover:underline text-blue-300 "
@@ -139,14 +141,22 @@ export default function Header() {
               Register
             </Link>
           </li>
-          <li>
-            <button
-              onClick={handleLogout}
-              className="hover:underline text-blue-300 "
-            >
-              Logout
-            </button>
-          </li>
+          {stateIsUserLoggedIn === true ? (
+            <li>
+              <button
+                onClick={handleLogout}
+                className="hover:underline text-blue-300 "
+              >
+                Logout
+              </button>
+            </li>
+          ) : (
+            <li>
+              <Link to="/login" className="hover:underline text-blue-300 ">
+                Login
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

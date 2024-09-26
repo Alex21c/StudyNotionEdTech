@@ -1,3 +1,8 @@
+import { useContext } from "react";
+import { ContextStudyNotionWebApp } from "../../Context";
+import { markUserAsLoggedInInsideLocalStorage } from "../../utils.mjs";
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import apiUrls from "../../apiUrls.mjs";
@@ -11,6 +16,13 @@ import MuiSnackbar, {
 } from "../../Components/MUI/Snackbar/MuiSnackbar";
 
 export default function ModifyRole() {
+  let { setStateWhoIsCurrentPage, setStateIsUserLoggedIn } = useContext(
+    ContextStudyNotionWebApp
+  );
+  useEffect(() => {
+    setStateWhoIsCurrentPage("Modify Role");
+  }, []);
+
   const navigate = useNavigate();
   const [open, setOpen] = useSetInitialStateSnackbar();
   const [snackbarState, setSnackbarState] = useState({
@@ -92,7 +104,8 @@ export default function ModifyRole() {
       }
 
       showSuccessMsg(response.message, setSnackbarState, setOpen);
-
+      markUserAsLoggedInInsideLocalStorage();
+      setStateIsUserLoggedIn(true);
       // redirect user to dashboard
       setTimeout(() => {
         navigate("/dashboard");
@@ -112,33 +125,44 @@ export default function ModifyRole() {
         setOpen={setOpen}
         snackbarState={snackbarState}
       />
-      <form onSubmit={handleFormSubmit}>
-        <fieldset>
-          <legend>Select a role for yours profile</legend>
-          <div>
-            <input
-              type="radio"
-              id="student"
-              name="role"
-              defaultValue="Student"
-              onChange={() => setStateRole("student")}
-              defaultChecked
-            />
-            <label htmlFor="student">Student</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="educator"
-              name="role"
-              defaultValue="Educator"
-              onChange={() => setStateRole("educator")}
-            />
-            <label htmlFor="educator">Educator</label>
-          </div>
-        </fieldset>
-        <button>Submit</button>
-      </form>
+      <Header />
+      <div className="flex justify-center p-[2rem] min-h-[72vh]">
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex flex-col gap-[1rem] text-[1.3rem]"
+        >
+          <fieldset>
+            <legend className=" text-stone-300">
+              Select a role for yours profile
+            </legend>
+            <div className="flex gap-[.5rem]">
+              <input
+                type="radio"
+                id="student"
+                name="role"
+                defaultValue="Student"
+                onChange={() => setStateRole("student")}
+                defaultChecked
+              />
+              <label htmlFor="student">Student</label>
+            </div>
+            <div className="flex gap-[.5rem]">
+              <input
+                type="radio"
+                id="educator"
+                name="role"
+                defaultValue="Educator"
+                onChange={() => setStateRole("educator")}
+              />
+              <label htmlFor="educator">Educator</label>
+            </div>
+          </fieldset>
+          <button className="px-[1rem] py-[.5rem] bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md hover:scale-[.95]  text-slate-900 font-medium hover:from-yellow-500 hover:to-yellow-300">
+            Submit
+          </button>
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 }

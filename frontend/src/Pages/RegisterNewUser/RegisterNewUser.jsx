@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import ContextStudyNotionWebApp from "../../Context";
+import { markUserAsLoggedInInsideLocalStorage } from "../../utils.mjs";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
 import RegisterNewUserImage from "../../Assests/Images/Register-New-User/register-new-user.png";
@@ -17,7 +20,15 @@ import MuiSnackbar, {
 } from "../../Components/MUI/Snackbar/MuiSnackbar";
 import { useState } from "react";
 import apiUrls from "../../apiUrls.mjs";
+
 export default function RegisterNewUser() {
+  let { setStateWhoIsCurrentPage, setStateIsUserLoggedIn } = useContext(
+    ContextStudyNotionWebApp
+  );
+  React.useEffect(() => {
+    setStateWhoIsCurrentPage("Register");
+  }, []);
+
   const navigate = useNavigate();
   const [open, setOpen] = useSetInitialStateSnackbar();
   const [snackbarState, setSnackbarState] = useState({
@@ -122,7 +133,8 @@ export default function RegisterNewUser() {
       }
 
       showSuccessMsg(response.message, setSnackbarState, setOpen);
-
+      markUserAsLoggedInInsideLocalStorage();
+      setStateIsUserLoggedIn(true);
       // redirect user to dashboard
       setTimeout(() => {
         navigate("/dashboard");
