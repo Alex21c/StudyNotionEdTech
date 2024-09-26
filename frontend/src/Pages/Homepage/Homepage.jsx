@@ -62,14 +62,6 @@ export default function Homepage() {
     msg: "",
     successOrError: "error",
   });
-  const handleType = (count) => {
-    // access word count number
-    console.log(count);
-  };
-
-  const handleDone = () => {
-    console.log(`Done after 5 loops!`);
-  };
 
   return (
     <div className="text-stone-100">
@@ -79,8 +71,8 @@ export default function Homepage() {
         snackbarState={snackbarState}
       />
       <Header />
-      <div className="flex flex-col gap-[2rem]">
-        <div className="flex flex-col items-center h-[35rem] overflow-hidden relative ">
+      <div className="flex flex-col gap-[2rem] items-center">
+        <div className="flex flex-col items-center h-[35rem] overflow-hidden relative w-[100%]">
           <div className="absolute top-0  bg-gradient-to-br from-slate-800 to-slate-950 w-[100%] h-[100%]  opacity-[.6]"></div>
           <img
             src={stateRandomBgImage}
@@ -219,7 +211,14 @@ export default function Homepage() {
             </div>
           </div>
         </div>
-        <HomepageReviews />
+        <div className="flex gap-[1rem] flex-col">
+          <h2 className="text-[2.3rem] font-semibold">
+            Reviews from other Learners
+          </h2>
+          <HomepageReviews />
+        </div>
+      </div>
+      <div className="mt-[2rem]">
         <Footer />
       </div>
     </div>
