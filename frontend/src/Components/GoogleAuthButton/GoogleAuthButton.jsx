@@ -3,7 +3,8 @@ export default function GoogleAuthButton({
   labelRegisterOrSignIn = "Register",
 }) {
   function handleRegisterWithGoogle() {
-    window.location.href = `${process.env.REACT_APP_SERVER_ROOT_URL}/auth/google`;
+    console.log(`${process.env.REACT_APP_SERVER_ROOT_URL}/auth/google`);
+    // window.location.href = `${process.env.REACT_APP_SERVER_ROOT_URL}/auth/google`;
   }
 
   return (

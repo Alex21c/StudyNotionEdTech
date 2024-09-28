@@ -82,11 +82,6 @@ app.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
-app.get("/api/protected-endpoint", (req, res) => {
-  console.log("Cookies:", req.cookies.jwt);
-  // Your protected logic here
-  res.send("Protected content");
-});
 
 // Handle the Google callback
 app.get(
