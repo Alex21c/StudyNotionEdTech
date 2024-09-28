@@ -48,7 +48,7 @@ const corsOptions = {
     if (
       !origin ||
       origin.includes("http://localhost:3000") ||
-      origin.includes("https://study-notion-edtech.vercel.app")
+      origin.includes("https://study-notion-ed-tech-fcst.vercel.app")
     ) {
       callback(null, true);
     } else {
