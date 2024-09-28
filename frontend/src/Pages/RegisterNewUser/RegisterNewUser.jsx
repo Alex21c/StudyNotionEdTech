@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import ContextStudyNotionWebApp from "../../Context";
+import { ContextStudyNotionWebApp } from "../../Context";
 import { markUserAsLoggedInInsideLocalStorage } from "../../utils.mjs";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
