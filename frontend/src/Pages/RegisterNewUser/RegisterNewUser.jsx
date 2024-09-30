@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { ContextStudyNotionWebApp } from "../../Context";
-import { markUserAsLoggedInInsideLocalStorage } from "../../utils.mjs";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
 import RegisterNewUserImage from "../../Assests/Images/Register-New-User/register-new-user.png";
@@ -22,11 +21,24 @@ import { useState } from "react";
 import apiUrls from "../../apiUrls.mjs";
 
 export default function RegisterNewUser() {
+  const button = {
+    normal:
+      "rounded-md px-[1rem] py-[.5rem] bg-gradient-to-br from-yellow-300 to-yellow-500  hover:scale-[.99]  text-slate-900 font-medium hover:from-yellow-500 hover:to-yellow-300",
+    disabled:
+      "px-[1rem] py-[.5rem] bg-gradient-to-br from-gray-300 to-gray-500 rounded-md   text-slate-900 font-medium hover:from-gray-500 hover:to-gray-300",
+  };
+  let [stateMakingApiCall, setStateMakingApiCall] = useState(false);
+  const buttonTitle = {
+    normal: "Create New Account",
+    disabled: "Wait Creating New Account for You...",
+  };
+
   let { setStateWhoIsCurrentPage, setStateIsUserLoggedIn } = useContext(
     ContextStudyNotionWebApp
   );
   React.useEffect(() => {
     setStateWhoIsCurrentPage("Register");
+    document.title = "Register New User";
   }, []);
 
   const navigate = useNavigate();
@@ -53,6 +65,10 @@ export default function RegisterNewUser() {
   };
   async function handleCreateNewAccountReq(event) {
     event.preventDefault();
+    if (stateMakingApiCall) {
+      return;
+    }
+
     // just check is password same
     if (refPassword.current.value !== refConfirmedPassword.current.value) {
       showErrorMsg(
@@ -64,7 +80,8 @@ export default function RegisterNewUser() {
     }
 
     try {
-      event.preventDefault();
+      setStateMakingApiCall(true);
+
       const apiUrl = apiUrls?.user?.registerNewUser;
       if (!apiUrl) {
         console.log("failed to make api call, Missing apiUrls registerNewUser");
@@ -132,15 +149,17 @@ export default function RegisterNewUser() {
         );
       }
 
-      showSuccessMsg(response.message, setSnackbarState, setOpen);
-      markUserAsLoggedInInsideLocalStorage();
       setStateIsUserLoggedIn(true);
+      showSuccessMsg(response.message, setSnackbarState, setOpen);
+
       // redirect user to dashboard
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
     } catch (error) {
       showErrorMsg(error.message, setSnackbarState, setOpen);
+    } finally {
+      setStateMakingApiCall(false);
     }
   }
 
@@ -328,8 +347,14 @@ export default function RegisterNewUser() {
                     className="bg-slate-500 p-[.5rem] rounded-md outline-none  border-[.11rem] border-transparent focus:border-stone-300"
                   />
                 </label>
-                <button className="px-[1rem] py-[.5rem] bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-md hover:scale-[.95]  text-slate-900 font-medium hover:from-yellow-500 hover:to-yellow-300">
-                  Create New Account
+                <button
+                  className={`${
+                    stateMakingApiCall ? button.disabled : button.normal
+                  }`}
+                >
+                  {stateMakingApiCall
+                    ? buttonTitle.disabled
+                    : buttonTitle.normal}
                 </button>
               </form>
             </div>

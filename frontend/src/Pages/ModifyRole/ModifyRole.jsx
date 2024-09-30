@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { ContextStudyNotionWebApp } from "../../Context";
-import { markUserAsLoggedInInsideLocalStorage } from "../../utils.mjs";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -16,11 +15,10 @@ import MuiSnackbar, {
 } from "../../Components/MUI/Snackbar/MuiSnackbar";
 
 export default function ModifyRole() {
-  let { setStateWhoIsCurrentPage, setStateIsUserLoggedIn } = useContext(
-    ContextStudyNotionWebApp
-  );
+  let { setStateWhoIsCurrentPage } = useContext(ContextStudyNotionWebApp);
   useEffect(() => {
     setStateWhoIsCurrentPage("Modify Role");
+    document.title = "Modify Yours Profile Role";
   }, []);
 
   const navigate = useNavigate();
@@ -104,8 +102,7 @@ export default function ModifyRole() {
       }
 
       showSuccessMsg(response.message, setSnackbarState, setOpen);
-      markUserAsLoggedInInsideLocalStorage();
-      setStateIsUserLoggedIn(true);
+
       // redirect user to dashboard
       setTimeout(() => {
         navigate("/dashboard");

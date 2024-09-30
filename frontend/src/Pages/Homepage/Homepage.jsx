@@ -1,5 +1,5 @@
 import Footer from "../../Components/Footer/Footer";
-import LinkButton from "../../Components/Button/Button";
+import LinkButton from "../../Components/LinkButton/LinkButton";
 import { ContextStudyNotionWebApp } from "../../Context";
 import { Link } from "react-router-dom";
 import validator from "validator";
@@ -92,8 +92,11 @@ export default function Homepage() {
               feedback from instructors.
             </p>
             <div className="flex gap-[2rem]">
-              <LinkButton btnLabel="Upskill Yourself" to="/" />
-              <LinkButton btnLabel="Become an Instructor" to="/" />
+              <LinkButton btnLabel="Upskill Yourself" to="/register-new-user" />
+              <LinkButton
+                btnLabel="Become an Instructor"
+                to="/register-new-user"
+              />
             </div>
           </div>
         </div>
@@ -207,7 +210,7 @@ export default function Homepage() {
               Developer.
             </p>
             <div className="flex gap-[2rem]">
-              <LinkButton btnLabel="Upskill Yourself" to="/" />
+              <LinkButton btnLabel="Upskill Yourself" to="/register-new-user" />
             </div>
           </div>
         </div>

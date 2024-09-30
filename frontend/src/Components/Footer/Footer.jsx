@@ -30,7 +30,10 @@ export default function Footer() {
             </Link>
           </li>
           <li>
-            <Link to="/" className="hover:underline text-blue-300">
+            <Link
+              to="/register-new-user"
+              className="hover:underline text-blue-300"
+            >
               Become an Instructor
             </Link>
           </li>

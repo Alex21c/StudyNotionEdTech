@@ -1,4 +1,3 @@
-import { markUserAsLoggedOutInsideLocalStorage } from "../../utils.mjs";
 import { ContextStudyNotionWebApp } from "../../Context";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -20,13 +19,9 @@ const styles = {
 };
 
 export default function Header() {
-  let { stateWhoIsCurrentPage, stateIsUserLoggedIn } = useContext(
-    ContextStudyNotionWebApp
-  );
-  useEffect(() => {
-    console.log(typeof stateIsUserLoggedIn);
-    console.log(stateIsUserLoggedIn);
-  }, []);
+  let { stateWhoIsCurrentPage, stateIsUserLoggedIn, setStateIsUserLoggedIn } =
+    useContext(ContextStudyNotionWebApp);
+
   const navigate = useNavigate();
   const [open, setOpen] = useSetInitialStateSnackbar();
   const [snackbarState, setSnackbarState] = useState({
@@ -89,13 +84,15 @@ export default function Header() {
       }
 
       showSuccessMsg(response.message, setSnackbarState, setOpen);
-      markUserAsLoggedOutInsideLocalStorage();
+
       // redirect user to dashboard
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } catch (error) {
       showErrorMsg(error.message, setSnackbarState, setOpen);
+    } finally {
+      setStateIsUserLoggedIn(false);
     }
   }
 
