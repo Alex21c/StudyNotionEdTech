@@ -42,7 +42,6 @@ mongoose
     process.exit(1);
   });
 
-console.log(process.env?.BASE_URL_FRONT_END);
 // cors
 const corsOptions = {
   origin: (origin, callback) => {
